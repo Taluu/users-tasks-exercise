@@ -1,0 +1,11 @@
+{
+    "name": "talus/test",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Baptiste Clavié",
+            "email": "clavie.b@gmail.com"
+        }
+    ],
+    "require": {}
+}
