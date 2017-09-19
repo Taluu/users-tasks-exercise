@@ -5,13 +5,17 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+use Doctrine\DBAL\DriverManager;
+
 class Kernel
 {
     /** @var callable[] */
     private $controllers;
 
-    public function __construct()
+    public function __construct(string $databaseDsn)
     {
+        $connection = DriverManager::getConnection(['url' => $databaseDsn]);
+
         $this->controllers = [];
     }
 

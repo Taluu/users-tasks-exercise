@@ -9,7 +9,7 @@ require __DIR__ . '/../vendor/autoload.php';
 $dotenv = new Dotenv;
 $dotenv->load(__DIR__ . '/../.env');
 
-$kernel = new Kernel;
+$kernel = new Kernel(getenv('DATABASE_URL'));
 
 /** @var Request */
 $request = Request::createFromGlobals();
