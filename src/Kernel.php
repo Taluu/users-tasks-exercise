@@ -7,6 +7,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 use Doctrine\DBAL\DriverManager;
 
+use Test\One\Controller;
+
 class Kernel
 {
     /** @var callable[] */
@@ -16,7 +18,9 @@ class Kernel
     {
         $connection = DriverManager::getConnection(['url' => $databaseDsn]);
 
-        $this->controllers = [];
+        $this->controllers = [
+            new Controller\AllUsersController($connection),
+        ];
     }
 
     public function handle(Request $request): Response
