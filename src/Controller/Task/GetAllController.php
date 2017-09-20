@@ -1,5 +1,5 @@
 <?php
-namespace Test\One\Controller;
+namespace Test\One\Controller\Task;
 
 use PDO;
 use DateTimeImmutable;
@@ -11,7 +11,7 @@ use Doctrine\DBAL\Connection;
 
 use Test\One\HttpException;
 
-class AllTasksController
+class GetAllController
 {
     /** @var Connection */
     private $connection;

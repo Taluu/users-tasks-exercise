@@ -19,12 +19,12 @@ class Kernel
         $connection = DriverManager::getConnection(['url' => $databaseDsn]);
 
         $this->controllers = [
-            new Controller\AllUsersController($connection),
-            new Controller\UserGetController($connection),
-            new Controller\UserDeleteController($connection),
+            new Controller\User\GetAllController($connection),
+            new Controller\User\GetController($connection),
+            new Controller\User\DeleteController($connection),
 
-            new Controller\AllTasksController($connection),
-            new Controller\TaskGetController($connection),
+            new Controller\Task\GetAllController($connection),
+            new Controller\Task\GetController($connection),
         ];
     }
 

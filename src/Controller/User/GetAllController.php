@@ -1,5 +1,5 @@
 <?php
-namespace Test\One\Controller;
+namespace Test\One\Controller\User;
 
 use PDO;
 
@@ -10,7 +10,7 @@ use Doctrine\DBAL\Connection;
 
 use Test\One\HttpException;
 
-class AllUsersController
+class GetAllController
 {
     /** @var Connection */
     private $connection;
