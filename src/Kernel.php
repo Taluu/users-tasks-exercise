@@ -23,6 +23,7 @@ class Kernel
             new Controller\UserGetController($connection),
 
             new Controller\AllTasksController($connection),
+            new Controller\TaskGetController($connection),
         ];
     }
 
