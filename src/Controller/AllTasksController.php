@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 use Doctrine\DBAL\Connection;
 
+use Test\One\HttpException;
+
 class AllTasksController
 {
     /** @var Connection */
