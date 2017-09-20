@@ -21,6 +21,7 @@ class Kernel
         $this->controllers = [
             new Controller\AllUsersController($connection),
             new Controller\UserGetController($connection),
+            new Controller\UserDeleteController($connection),
 
             new Controller\AllTasksController($connection),
             new Controller\TaskGetController($connection),
