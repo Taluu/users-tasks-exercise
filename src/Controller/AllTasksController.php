@@ -38,8 +38,16 @@ class AllTasksController
 SELECT id, user_id, title, description, created_at, `status`
 FROM task
 SQL;
+        if ($request->query->has('user')) {
+            $sql .= "\nWHERE user_id = ?";
+        }
 
         $statement = $this->connection->prepare($sql);
+
+        if ($request->query->has('user')) {
+            $statement->bindValue(1, $request->query->get('user'), PDO::PARAM_INT);
+        }
+
         $statement->execute();
 
         $tasks = [];
