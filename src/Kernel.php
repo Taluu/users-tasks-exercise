@@ -22,6 +22,7 @@ class Kernel
             new Controller\User\GetAllController($connection),
             new Controller\User\GetController($connection),
             new Controller\User\DeleteController($connection),
+            new Controller\User\CreateController($connection),
 
             new Controller\Task\GetAllController($connection),
             new Controller\Task\GetController($connection),
