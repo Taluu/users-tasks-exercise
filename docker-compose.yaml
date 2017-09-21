@@ -11,22 +11,19 @@ services:
       - ./:/srv/app:rw
 
   nginx:
-    build:
-      context: .
-      dockerfile: .docker/nginx/Dockerfile
+    image: nginx:1.13-alpine
     volumes:
-      # Comment out the next line in production
       - ./.docker/nginx/conf.d:/etc/nginx/conf.d:ro
       - ./public:/srv/app/public:ro
     ports:
       - '80:80'
 
   db:
-    build:
-      context: .
-      dockerfile: .docker/sql/Dockerfile
+    image: mysql:5.7
     environment:
       - MYSQL_DATABASE=test_one
       - MYSQL_PASSWORD=one
       - MYSQL_RANDOM_ROOT_PASSWORD=true
       - MYSQL_USER=hello
+    volumes:
+      - .docker/sql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
