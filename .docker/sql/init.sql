@@ -20,11 +20,11 @@ CREATE TABLE task (
     `created_at` DATETIME NOT NULL,
     `status` VARCHAR(255) NOT NULL,
 
-    INDEX IDX_527EDB25A76ED395 (user_id),
+    INDEX user (user_id),
     PRIMARY KEY(id)
 ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB;
 
-ALTER TABLE task ADD CONSTRAINT FK_527EDB25A76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE SET NULL;
+ALTER TABLE task ADD CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE SET NULL;
 
 INSERT INTO task(`user_id`, `title`, `description`, `created_at`, `status`) VALUES
     (1, 'foo #1', null, NOW(), 'todo'),
