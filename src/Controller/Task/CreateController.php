@@ -13,9 +13,12 @@ use Chanmix51\ParameterJuicer\Exception\ValidationException;
 use Doctrine\DBAL\Connection;
 
 use Test\One\HttpException;
+use Test\One\Controller\ValidationTrait;
 
 class CreateController
 {
+    use ValidationTrait;
+
     /** @var Connection */
     private $connection;
 
@@ -126,21 +129,5 @@ SQL;
         ];
 
         return new JsonResponse($task, 201);
-    }
-
-    private function renderException(ValidationException $e): array {
-        $data = [
-            'error_message' => $e->getMessage()
-        ];
-
-        foreach ($e->getExceptions() as $field => $exceptions) {
-            $data[$field] = [];
-
-            foreach ($exceptions as $exception) {
-                $data[$field][] = $this->renderException($exception);
-            }
-        }
-
-        return $data;
     }
 }
