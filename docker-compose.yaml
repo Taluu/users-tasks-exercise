@@ -4,6 +4,7 @@ services:
   app:
     build:
       context: .
+      dockerfile: .docker/app/Dockerfile
     depends_on:
       - db
     volumes:
@@ -12,7 +13,7 @@ services:
   nginx:
     build:
       context: .
-      dockerfile: ./Dockerfile.nginx
+      dockerfile: .docker/nginx/Dockerfile
     volumes:
       # Comment out the next line in production
       - ./.docker/nginx/conf.d:/etc/nginx/conf.d:ro
@@ -23,7 +24,7 @@ services:
   db:
     build:
       context: .
-      dockerfile: ./Dockerfile.db
+      dockerfile: .docker/sql/Dockerfile
     environment:
       - MYSQL_DATABASE=test_one
       - MYSQL_PASSWORD=one
