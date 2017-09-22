@@ -1,6 +1,10 @@
 <?php
 namespace Test\One;
 
+use Twig_Environment;
+use Twig_Cache_Filesystem;
+use Twig_Loader_Filesystem;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -16,6 +20,11 @@ class Kernel
 
     public function __construct(string $databaseDsn)
     {
+        $twig = new Twig_Environment(
+            new Twig_Loader_Filesystem(__DIR__ . '/../templates'),
+            ['cache' => new Twig_Cache_Filesystem(__DIR__ . '/../var/cache/tpl')]
+        );
+
         $connection = DriverManager::getConnection(['url' => $databaseDsn]);
 
         $this->controllers = [
@@ -28,6 +37,8 @@ class Kernel
             new Controller\Task\GetController($connection),
             new Controller\Task\CreateController($connection),
             new Controller\Task\EditController($connection),
+
+            new Controller\FrontController($connection, $twig),
         ];
     }
 

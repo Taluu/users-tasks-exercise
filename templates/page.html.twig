@@ -1,0 +1,111 @@
+<html>
+    <head>
+        <title>Test @One</title>
+        <style>
+            table {
+                border-collapse: collapse;
+            }
+
+            table thead tr th,
+            table tbody tr td {
+                border: 1px solid black;
+                padding: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <h1>Test @One</h1>
+            <h2>Users List</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>E-Mail</th>
+                        <th>Tasks</th>
+                        <th />
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                        <tr id="users_{{user.id}}">
+                            <td>{{ user.name }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{% spaceless %}
+                                {% for task in user.tasks %}
+                                    {{ task.title }} ({{ task.status }}) {% if not loop.last %} - {% endif %}
+                                {% endfor %}
+                                {% endspaceless %}</td>
+                            <td><span id="user_{{ user.id }}_delete">Delete</span></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <h2>Tasks List</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Creation Date</th>
+                        <th>Assigned to</th>
+                        <th />
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in tasks %}
+                        <tr id="tasks_{{task.id}}">
+                            <td>{{ task.title }}</td>
+                            <td>{{ task.description }}</td>
+                            <td>{{ task.status }}</td>
+                            <td>{{ task.created_at.format('d/m/Y H:i:s') }}</td>
+                            <td>{{ task.user ? task.user.name : 'nobody' }}</td>
+                            <td>
+                                <span id="task_{{ task.id }}_edit">Edit</span> -
+                                <span id="task_{{ task.id }}_delete">Delete</span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <hr />
+
+            <h2>Add a User</h2>
+            <div>
+                <input type="text" placeholder="Name" name="new_user[name]" />
+                <input type="email" placeholder="E-Mail" name="new_user[email]" />
+                <input type="button" id="new_user" value="Create" />
+            </div>
+
+            <h2>Add a Task</h2>
+            <div>
+                <input type="text" placeholder="Title" name="new_task[title]" />
+                <input type="email" placeholder="Description" name="new_task[email]" />
+                <input type="button" id="new_task" value="Create" />
+            </div>
+
+            <div id="edit_div" style="display: none;">
+                <hr />
+
+                <h2>Modifications on a Task</h2>
+                <div>
+                    <input type="text" disabled placeholder="Title" name="edit_task[title]" />
+                    <input type="text" disabled placeholder="Description" name="edit_task[description]" />
+                    <input type="text" placeholder="Status" name="edit_task[status]" />
+
+                    <select name="edit_task[user]" />
+                        <option value="-1">None</option>
+                        {% for user in users %}
+                            <option value="/users/{{ user.id }}">{{ user.name }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <input type="button" id="edit_task" value="Edit" />
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
