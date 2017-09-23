@@ -15,7 +15,7 @@ var one = {
         let old_list = document.getElementById("users_list");
         let new_list  = document.createElement("tbody");
 
-        for (var id in users) {
+        for (let id in users) {
             let row, cell;
             let user = users[id];
 
@@ -59,7 +59,7 @@ var one = {
         let old_list = document.getElementById("tasks_list");
         let new_list  = document.createElement("tbody");
 
-        for (var id in tasks) {
+        for (let id in tasks) {
             let row, cell, span;
             let task = tasks[id];
 
@@ -106,7 +106,7 @@ var one = {
     },
 
     "register": function (document, name, action, callable) {
-        var selector = "span[name=\"" + name + "_" + action + "\"]";
+        const selector = "span[name=\"" + name + "_" + action + "\"]";
 
         document
             .querySelectorAll(selector)
@@ -114,15 +114,12 @@ var one = {
                     span.addEventListener(
                         'click',
                         function () {
-                            var target = {};
-                            var targetName = "";
-
                             if ("user" === name) {
-                                target = one.users["/users/" + span.attributes['user-id'].value];
-                                targetName = target.name;
+                                let target = one.users["/users/" + span.attributes['user-id'].value];
+                                let targetName = target.name;
                             } else {
-                                target = one.tasks["/tasks/" + span.attributes['task-id'].value];
-                                targetName = target.title;
+                                let target = one.tasks["/tasks/" + span.attributes['task-id'].value];
+                                let targetName = target.title;
                             }
 
                             if ("delete" === action && !confirm("Delete " + name + " " + targetName + " ?")) {
