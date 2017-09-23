@@ -6,8 +6,6 @@ RUN apk add --no-cache --virtual .persistent-deps \
 		make \
 		zlib
 
-ENV APCU_VERSION 5.1.8
-
 RUN set -xe \
 	&& apk add --no-cache --virtual .build-deps \
 		$PHPIZE_DEPS \
@@ -22,9 +20,6 @@ RUN set -xe \
 	&& docker-php-ext-enable --ini-name 05-opcache.ini opcache \
 	&& docker-php-ext-enable xdebug \
 	&& apk del .build-deps
-
-###> recipes ###
-###< recipes ###
 
 COPY .docker/app/php.ini /usr/local/etc/php/php.ini
 
@@ -47,11 +42,8 @@ COPY . .
 # Cleanup unneeded files
 RUN rm -Rf .docker/
 
-RUN mkdir -p var/cache var/logs \
-    && composer install --prefer-dist --no-dev --no-progress --no-suggest --optimize-autoloader --classmap-authoritative --no-interaction \
-	&& composer clear-cache \
-# Permissions hack because setfacl does not work on Mac and Windows
-	&& chown -R www-data var
+RUN composer install --prefer-dist --no-dev --no-progress --no-suggest --optimize-autoloader --classmap-authoritative --no-interaction \
+	&& composer clear-cache
 
 COPY .docker/app/docker-entrypoint.sh /usr/local/bin/docker-app-entrypoint
 RUN chmod +x /usr/local/bin/docker-app-entrypoint
