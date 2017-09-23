@@ -67,16 +67,14 @@ var one = {
             cell.appendChild(document.createTextNode(user.email));
             row.appendChild(cell);
 
-            cell = document.createElement("td");
+            let tasks = [];
 
             user.tasks.forEach(function (task) {
-                let span = document.createElement("span");
-                span.setAttribute("name", "user_tasks");
-                span.appendChild(document.createTextNode(task.title + " (" + task.status + ")"));
-
-                cell.appendChild(span);
+                tasks.push( task.title + " (" + task.status + ")");
             });
 
+            cell = document.createElement("td");
+            cell.appendChild(document.createTextNode(tasks.join(' - ')));
             row.appendChild(cell);
 
             cell = document.createElement("td");
