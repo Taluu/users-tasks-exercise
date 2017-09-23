@@ -1,0 +1,70 @@
+<html>
+    <head>
+        <title>Test @One</title>
+        <style>
+            table {
+                border-collapse: collapse;
+            }
+
+            table thead tr th,
+            table tbody tr td {
+                border: 1px solid black;
+                padding: 10px;
+            }
+
+            span[name="user_tasks"] {
+                margin: 5px;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <h1>Test @One</h1>
+            <h2>Users List</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>E-Mail</th>
+                        <th>Tasks</th>
+                        <th />
+                    </tr>
+                </thead>
+                <tbody id="users_list" />
+            </table>
+
+            <h2>Tasks List</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Creation Date</th>
+                        <th>Assigned to</th>
+                        <th />
+                    </tr>
+                </thead>
+                <tbody id="tasks_list" />
+            </table>
+
+            <hr />
+
+            <h2>Add a User</h2>
+            <div>
+                <input type="text" placeholder="Name" name="new_user[name]" />
+                <input type="email" placeholder="E-Mail" name="new_user[email]" />
+                <input type="button" id="new_user" value="Create" />
+            </div>
+
+            <h2>Add a Task</h2>
+            <div>
+                <input type="text" placeholder="Title" name="new_task[title]" />
+                <input type="email" placeholder="Description" name="new_task[email]" />
+                <input type="button" id="new_task" value="Create" />
+            </div>
+        </div>
+
+        <script src="/one.js" />
+    </body>
+</html>

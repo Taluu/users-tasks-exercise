@@ -11,7 +11,6 @@
     "require": {
         "symfony/http-foundation": "^3.3",
         "doctrine/dbal": "^2.6",
-        "twig/twig": "^2.4",
         "symfony/dotenv": "^3.3",
         "chanmix51/parameter-juicer": "^1.0"
     },
