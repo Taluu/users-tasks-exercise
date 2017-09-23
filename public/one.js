@@ -3,12 +3,12 @@ var one = {
     "users": {},
 
     "redraw": function (document) {
-        one.redraw_users(document, one.users);
-        one.redraw_tasks(document, one.tasks);
+        this.redraw_users(document, this.users);
+        this.redraw_tasks(document, this.tasks);
 
-        one.register(document, 'task', 'edit', function (target) { console.log(target); });
-        one.register(document, 'task', 'delete', function (target) { console.log(target); });
-        one.register(document, 'user', 'delete', function (target) { console.log(target); });
+        this.register(document, 'task', 'edit', function (target) { console.log(target); });
+        this.register(document, 'task', 'delete', function (target) { console.log(target); });
+        this.register(document, 'user', 'delete', function (target) { console.log(target); });
     },
 
     "redraw_users": function (document, users) {
@@ -16,7 +16,7 @@ var one = {
         let new_list  = document.createElement("tbody");
 
         for (let id in users) {
-            let row, cell;
+            let row, cell, span;
             let user = users[id];
 
             row = document.createElement("tr");
@@ -42,10 +42,10 @@ var one = {
             row.appendChild(cell);
 
             cell = document.createElement("td");
-            let span = document.createElement("span");
-            span.setAttribute("name", "user_delete");
-            span.setAttribute("user-id", user.id);
-            span.appendChild(document.createTextNode("Delete"));
+                span = document.createElement("span");
+                span.setAttribute("name", "user_delete");
+                span.setAttribute("user-id", user.id);
+                span.appendChild(document.createTextNode("Delete"));
             cell.appendChild(span);
             row.appendChild(cell);
 
@@ -107,6 +107,7 @@ var one = {
 
     "register": function (document, name, action, callable) {
         const selector = "span[name=\"" + name + "_" + action + "\"]";
+        let that = this;
 
         document
             .querySelectorAll(selector)
@@ -115,10 +116,10 @@ var one = {
                         'click',
                         function () {
                             if ("user" === name) {
-                                let target = one.users["/users/" + span.attributes['user-id'].value];
+                                let target = that.users["/users/" + span.attributes['user-id'].value];
                                 let targetName = target.name;
                             } else {
-                                let target = one.tasks["/tasks/" + span.attributes['task-id'].value];
+                                let target = that.tasks["/tasks/" + span.attributes['task-id'].value];
                                 let targetName = target.title;
                             }
 
