@@ -28,6 +28,7 @@ class Kernel
             new Controller\Task\GetController($connection),
             new Controller\Task\CreateController($connection),
             new Controller\Task\EditController($connection),
+            new Controller\Task\DeleteController($connection),
         ];
     }
 
