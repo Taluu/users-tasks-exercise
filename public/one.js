@@ -30,8 +30,22 @@ var one = {
             });
         });
 
-        this.register(document, 'user', 'delete', function (target) {
-            console.log(target);
+        this.register(document, 'user', 'delete', function (user) {
+            let id = "/users/" + user.id;
+
+            that.send("DELETE", "//localhost" + id, 204, function () {
+                for (let id in that.tasks) {
+                    let task = that.tasks[id];
+
+                    if (task.user === user) {
+                        delete task.user;
+                        task.user = null;
+                    }
+                }
+
+                delete that.users[id];
+                that.redraw(document);
+            });
         });
     },
 
