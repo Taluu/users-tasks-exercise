@@ -3,6 +3,8 @@ var one = {
     "users": {},
 
     "redraw": function (document) {
+        let that = this;
+
         this.redraw_users(document, this.users);
         this.redraw_tasks(document, this.tasks);
 
@@ -10,8 +12,22 @@ var one = {
             console.log(target);
         });
 
-        this.register(document, 'task', 'delete', function (target) {
-            console.log(this);
+        this.register(document, 'task', 'delete', function (task) {
+            let id = "/tasks/" + task.id;
+
+            that.send("DELETE", "//localhost" + id, 204, function () {
+                for (let id in that.users) {
+                    let user = that.users[id];
+                    let index = user.tasks.indexOf(task);
+
+                    if (-1 !== index) {
+                        user.tasks.splice(index, 1);
+                    }
+                }
+
+                delete that.tasks[id];
+                that.redraw(document);
+            });
         });
 
         this.register(document, 'user', 'delete', function (target) {
