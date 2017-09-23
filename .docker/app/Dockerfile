@@ -15,10 +15,10 @@ RUN set -xe \
 		intl \
 		zip \
 		pdo_mysql \
-	&& pecl install \
-		xdebug \
+	#&& pecl install \
+		#xdebug \
 	&& docker-php-ext-enable --ini-name 05-opcache.ini opcache \
-	&& docker-php-ext-enable xdebug \
+	#&& docker-php-ext-enable xdebug \
 	&& apk del .build-deps
 
 COPY .docker/app/php.ini /usr/local/etc/php/php.ini
