@@ -70,7 +70,7 @@ var one = {
             row.appendChild(cell);
 
             cell = document.createElement("td");
-            cell.appendChild(document.createTextNode(task.description));
+            cell.appendChild(document.createTextNode(task.description || ""));
             row.appendChild(cell);
 
             cell = document.createElement("td");
@@ -78,7 +78,7 @@ var one = {
             row.appendChild(cell);
 
             cell = document.createElement("td");
-            cell.appendChild(document.createTextNode(task.created_at.toLocaleDateString() + " " + task.created_at.toLocaleTimeString()));
+            cell.appendChild(document.createTextNode(task.created_at.toString()));
             row.appendChild(cell);
 
             cell = document.createElement("td");
