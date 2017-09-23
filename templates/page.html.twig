@@ -65,6 +65,7 @@
                 <input type="button" id="new_task" value="Create" />
             </div>
 
+            <!--
             <div id="edit_div" style="display: none;">
                 <hr />
 
@@ -84,6 +85,7 @@
                     <input type="button" id="edit_task" value="Edit" />
                 </div>
             </div>
+            // -->
         </div>
 
         <script>
@@ -92,44 +94,6 @@
                 "users": {},
 
                 "ready": function (document) {
-                    one.tasks = {
-                        {% for task in tasks %}
-                            "/tasks/{{ task.id }}": {
-                                "id": {{ task.id }},
-                                "title": "{{ task.title }}",
-                                "description": {{ (task.description ? "\"" ~ task.description ~ "\"" : "null")|raw }},
-                                "created_at": new Date("{{ task.created_at.format('c') }}"),
-                                "status": "{{ task.status }}",
-                                "user": {{ (task.user ? "\"/users/" ~ task.user.id ~ "\"" : "null")|raw }}
-                            } {% if not loop.last %},{% endif %}
-                        {% endfor %}
-                    };
-
-                    one.users = {
-                        {% for user in users %}
-                            "/users/{{ user.id }}": {
-                                "id": {{ user.id }},
-                                "name": "{{ user.name }}",
-                                "email": "{{ user.email }}",
-
-                                "tasks": [
-                                {% for task in user.tasks %}
-                                    one.tasks["/tasks/{{ task.id }}"]{% if not loop.last %},{% endif %}
-                                {% endfor %}
-                                ]
-                            } {% if not loop.last %},{% endif %}
-                        {% endfor %}
-                    };
-
-                    for (var key in one.tasks) {
-                        if (null === one.tasks[key].user) {
-                            return;
-                        }
-
-                        one.tasks[key].user = one.users[one.tasks[key].user];
-                    }
-
-                    one.redraw(document);
                 },
 
                 "redraw": function (document) {
@@ -265,11 +229,53 @@
                                 );
                             })
                     ;
+                },
+
+                "load": function (path, status, success, error) {
+                    let xhr = new XMLHttpRequest();
+
+                    xhr.onreadystatechange = function() {
+                        if (XMLHttpRequest.DONE === xhr.readyState) {
+                            if (status === xhr.status && success) {
+                                success(JSON.parse(xhr.responseText));
+                            } else if (status !== xhr && error) {
+                                error(xhr);
+                            }
+                        }
+                    };
+
+                    xhr.open("GET", path, true);
+                    xhr.send();
                 }
             };
 
             (function (document) {
-                one.ready(document);
+                one.load("//localhost/tasks", 200, function (tasks) {
+                    tasks.forEach(function (task) {
+                        task.data.created_at = new Date(task.data.created_at);
+                        one.tasks[task["@id"]] = task.data;
+                    });
+
+                    one.load("//localhost/users", 200, function (users) {
+                        users.forEach(function (user) {
+                            user.data.tasks.forEach(function (task_id, key) {
+                                user.data.tasks[key] = one.tasks[task_id];
+                            });
+
+                            one.users[user["@id"]] = user.data;
+                        });
+
+                        tasks.forEach(function (task) {
+                            if (null === task.data.user) {
+                                return;
+                            }
+
+                            task.data.user = one.users[task.data.user];
+                        });
+
+                        one.redraw(document);
+                    });
+                }, function (xhr) { console.error(xhr); });
             })(document);
         </script>
     </body>
