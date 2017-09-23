@@ -5,8 +5,8 @@ var one = {
     "redraw": function (document) {
         let that = this;
 
-        this.redraw_users(document, this.users);
-        this.redraw_tasks(document, this.tasks);
+        this.redraw_users(document);
+        this.redraw_tasks(document);
 
         this.register(document, 'task', 'edit', function (target) {
             console.log(target);
@@ -49,13 +49,13 @@ var one = {
         });
     },
 
-    "redraw_users": function (document, users) {
+    "redraw_users": function (document) {
         let old_list = document.getElementById("users_list");
         let new_list  = document.createElement("tbody");
 
-        for (let id in users) {
+        for (let id in this.users) {
             let row, cell, span;
-            let user = users[id];
+            let user = this.users[id];
 
             row = document.createElement("tr");
 
@@ -94,13 +94,13 @@ var one = {
         old_list.parentNode.replaceChild(new_list, old_list);
     },
 
-    "redraw_tasks": function (document, tasks) {
+    "redraw_tasks": function (document) {
         let old_list = document.getElementById("tasks_list");
         let new_list  = document.createElement("tbody");
 
-        for (let id in tasks) {
+        for (let id in this.tasks) {
             let row, cell, span;
-            let task = tasks[id];
+            let task = this.tasks[id];
 
             row = document.createElement("tr");
 
