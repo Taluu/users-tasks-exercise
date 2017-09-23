@@ -152,10 +152,22 @@ var one = {
 
         xhr.onreadystatechange = function() {
             if (XMLHttpRequest.DONE === xhr.readyState) {
-                if (status === xhr.status && success) {
-                    success(JSON.parse(xhr.responseText));
-                } else if (status !== xhr && error) {
-                    error(xhr);
+                if (status !== xhr.status) {
+                    if (error) {
+                        error(xhr);
+                    }
+
+                    return;
+                }
+
+                if (success) {
+                    result = {};
+
+                    if (xhr.responseText) {
+                        result = JSON.parse(xhr.responseText);
+                    }
+
+                    success(result);
                 }
             }
         };
