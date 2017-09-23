@@ -6,9 +6,17 @@ var one = {
         this.redraw_users(document, this.users);
         this.redraw_tasks(document, this.tasks);
 
-        this.register(document, 'task', 'edit', function (target) { console.log(target); });
-        this.register(document, 'task', 'delete', function (target) { console.log(target); });
-        this.register(document, 'user', 'delete', function (target) { console.log(target); });
+        this.register(document, 'task', 'edit', function (target) {
+            console.log(target);
+        });
+
+        this.register(document, 'task', 'delete', function (target) {
+            console.log(this);
+        });
+
+        this.register(document, 'user', 'delete', function (target) {
+            console.log(target);
+        });
     },
 
     "redraw_users": function (document, users) {
@@ -115,12 +123,14 @@ var one = {
                     span.addEventListener(
                         'click',
                         function () {
+                            let target, targetName;
+
                             if ("user" === name) {
-                                let target = that.users["/users/" + span.attributes['user-id'].value];
-                                let targetName = target.name;
+                                target = that.users["/users/" + span.attributes['user-id'].value];
+                                targetName = target.name;
                             } else {
-                                let target = that.tasks["/tasks/" + span.attributes['task-id'].value];
-                                let targetName = target.title;
+                                target = that.tasks["/tasks/" + span.attributes['task-id'].value];
+                                targetName = target.title;
                             }
 
                             if ("delete" === action && !confirm("Delete " + name + " " + targetName + " ?")) {
