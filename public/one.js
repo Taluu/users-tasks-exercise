@@ -60,6 +60,7 @@ var one = {
             new_list.appendChild(row);
         }
 
+        new_list.id = old_list.id;
         old_list.parentNode.replaceChild(new_list, old_list);
     },
 
@@ -110,6 +111,7 @@ var one = {
             new_list.appendChild(row);
         }
 
+        new_list.id = old_list.id;
         old_list.parentNode.replaceChild(new_list, old_list);
     },
 
