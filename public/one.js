@@ -135,7 +135,7 @@ var one = {
         ;
     },
 
-    "load": function (path, status, success, error) {
+    "load": function (method, path, status, success, error) {
         let xhr = new XMLHttpRequest();
 
         xhr.onreadystatechange = function() {
@@ -148,7 +148,7 @@ var one = {
             }
         };
 
-        xhr.open("GET", path, true);
+        xhr.open(method, path, true);
         xhr.send();
     }
 };
