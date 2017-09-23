@@ -11,6 +11,10 @@
                 border: 1px solid black;
                 padding: 10px;
             }
+
+            span[name="user_tasks"] {
+                margin: 5px;
+            }
         </style>
     </head>
     <body>
@@ -26,20 +30,7 @@
                         <th />
                     </tr>
                 </thead>
-                <tbody>
-                    {% for user in users %}
-                        <tr id="users_{{user.id}}">
-                            <td>{{ user.name }}</td>
-                            <td>{{ user.email }}</td>
-                            <td>{% spaceless %}
-                                {% for task in user.tasks %}
-                                    {{ task.title }} ({{ task.status }}) {% if not loop.last %} - {% endif %}
-                                {% endfor %}
-                                {% endspaceless %}</td>
-                            <td><span id="user_{{ user.id }}_delete">Delete</span></td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
+                <tbody id="users_list" />
             </table>
 
             <h2>Tasks List</h2>
@@ -54,20 +45,7 @@
                         <th />
                     </tr>
                 </thead>
-                <tbody>
-                    {% for task in tasks %}
-                        <tr id="tasks_{{task.id}}">
-                            <td>{{ task.title }}</td>
-                            <td>{{ task.description }}</td>
-                            <td>{{ task.status }}</td>
-                            <td>{{ task.created_at.format('d/m/Y H:i:s') }}</td>
-                            <td>{{ task.user ? task.user.name : 'nobody' }}</td>
-                            <td>
-                                <span id="task_{{ task.id }}_edit">Edit</span> -
-                                <span id="task_{{ task.id }}_delete">Delete</span>
-                            </td>
-                        </tr>
-                    {% endfor %}
+                <tbody id="tasks_list">
                 </tbody>
             </table>
 
@@ -107,5 +85,192 @@
                 </div>
             </div>
         </div>
+
+        <script>
+            var one = {
+                "tasks": {},
+                "users": {},
+
+                "ready": function (document) {
+                    one.tasks = {
+                        {% for task in tasks %}
+                            "/tasks/{{ task.id }}": {
+                                "id": {{ task.id }},
+                                "title": "{{ task.title }}",
+                                "description": {{ (task.description ? "\"" ~ task.description ~ "\"" : "null")|raw }},
+                                "created_at": new Date("{{ task.created_at.format('c') }}"),
+                                "status": "{{ task.status }}",
+                                "user": {{ (task.user ? "\"/users/" ~ task.user.id ~ "\"" : "null")|raw }}
+                            } {% if not loop.last %},{% endif %}
+                        {% endfor %}
+                    };
+
+                    one.users = {
+                        {% for user in users %}
+                            "/users/{{ user.id }}": {
+                                "id": {{ user.id }},
+                                "name": "{{ user.name }}",
+                                "email": "{{ user.email }}",
+
+                                "tasks": [
+                                {% for task in user.tasks %}
+                                    one.tasks["/tasks/{{ task.id }}"]{% if not loop.last %},{% endif %}
+                                {% endfor %}
+                                ]
+                            } {% if not loop.last %},{% endif %}
+                        {% endfor %}
+                    };
+
+                    for (var key in one.tasks) {
+                        if (null === one.tasks[key].user) {
+                            return;
+                        }
+
+                        one.tasks[key].user = one.users[one.tasks[key].user];
+                    }
+
+                    one.redraw(document);
+                },
+
+                "redraw": function (document) {
+                    one.redraw_users(document, one.users);
+                    one.redraw_tasks(document, one.tasks);
+
+                    one.register(document, 'task', 'edit', function (target) { console.log(target); });
+                    one.register(document, 'task', 'delete', function (target) { console.log(target); });
+                    one.register(document, 'user', 'delete', function (target) { console.log(target); });
+                },
+
+                "redraw_users": function (document, users) {
+                    let old_list = document.getElementById("users_list");
+                    let new_list  = document.createElement("tbody");
+
+                    for (var id in users) {
+                        let row, cell;
+                        let user = users[id];
+
+                        row = document.createElement("tr");
+
+                        cell = document.createElement("td");
+                        cell.appendChild(document.createTextNode(user.name));
+                        row.appendChild(cell);
+
+                        cell = document.createElement("td");
+                        cell.appendChild(document.createTextNode(user.email));
+                        row.appendChild(cell);
+
+                        cell = document.createElement("td");
+
+                        user.tasks.forEach(function (task) {
+                            let span = document.createElement("span");
+                            span.setAttribute("name", "user_tasks");
+                            span.appendChild(document.createTextNode(task.title + " (" + task.status + ")"));
+
+                            cell.appendChild(span);
+                        });
+
+                        row.appendChild(cell);
+
+                        cell = document.createElement("td");
+                        let span = document.createElement("span");
+                        span.setAttribute("name", "user_delete");
+                        span.setAttribute("user-id", user.id);
+                        span.appendChild(document.createTextNode("Delete"));
+                        cell.appendChild(span);
+                        row.appendChild(cell);
+
+                        new_list.appendChild(row);
+                    }
+
+                    old_list.parentNode.replaceChild(new_list, old_list);
+                },
+
+                "redraw_tasks": function (document, tasks) {
+                    let old_list = document.getElementById("tasks_list");
+                    let new_list  = document.createElement("tbody");
+
+                    for (var id in tasks) {
+                        let row, cell, span;
+                        let task = tasks[id];
+
+                        row = document.createElement("tr");
+
+                        cell = document.createElement("td");
+                        cell.appendChild(document.createTextNode(task.title));
+                        row.appendChild(cell);
+
+                        cell = document.createElement("td");
+                        cell.appendChild(document.createTextNode(task.description));
+                        row.appendChild(cell);
+
+                        cell = document.createElement("td");
+                        cell.appendChild(document.createTextNode(task.status));
+                        row.appendChild(cell);
+
+                        cell = document.createElement("td");
+                        cell.appendChild(document.createTextNode(task.created_at.toLocaleDateString() + " " + task.created_at.toLocaleTimeString()));
+                        row.appendChild(cell);
+
+                        cell = document.createElement("td");
+                        cell.appendChild(document.createTextNode(task.user ? task.user.name : 'nobody'));
+                        row.appendChild(cell);
+
+                        cell = document.createElement("td");
+                            span = document.createElement("span");
+                            span.setAttribute("name", "task_edit");
+                            span.setAttribute("task-id", task.id);
+                            span.appendChild(document.createTextNode("Edit"));
+                        cell.appendChild(span);
+                        cell.appendChild(document.createTextNode(" - "));
+                            span = document.createElement("span");
+                            span.setAttribute("name", "task_delete");
+                            span.setAttribute("task-id", task.id);
+                            span.appendChild(document.createTextNode("Delete"));
+                        cell.appendChild(span);
+                        row.appendChild(cell);
+
+                        new_list.appendChild(row);
+                    }
+
+                    old_list.parentNode.replaceChild(new_list, old_list);
+                },
+
+                "register": function (document, name, action, callable) {
+                    var selector = "span[name=\"" + name + "_" + action + "\"]";
+
+                    document
+                        .querySelectorAll(selector)
+                            .forEach(function (span) {
+                                span.addEventListener(
+                                    'click',
+                                    function () {
+                                        var target = {};
+                                        var targetName = "";
+
+                                        if ("user" === name) {
+                                            target = one.users["/users/" + span.attributes['user-id'].value];
+                                            targetName = target.name;
+                                        } else {
+                                            target = one.tasks["/tasks/" + span.attributes['task-id'].value];
+                                            targetName = target.title;
+                                        }
+
+                                        if ("delete" === action && !confirm("Delete " + name + " " + targetName + " ?")) {
+                                            return;
+                                        }
+
+                                        callable(target);
+                                    },
+                                    false
+                                );
+                            })
+                    ;
+                }
+            };
+
+            (function (document) {
+                one.ready(document);
+            })(document);
+        </script>
     </body>
 </html>
