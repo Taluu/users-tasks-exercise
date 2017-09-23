@@ -65,6 +65,36 @@
             </div>
         </div>
 
-        <script src="/one.js" />
+        <script src="/one.js"></script>
+        <script>
+            (function (document) {
+                one.load("//localhost/tasks", 200, function (tasks) {
+                    tasks.forEach(function (task) {
+                        task.data.created_at = new Date(task.data.created_at);
+                        one.tasks[task["@id"]] = task.data;
+                    });
+
+                    one.load("//localhost/users", 200, function (users) {
+                        users.forEach(function (user) {
+                            user.data.tasks.forEach(function (task_id, key) {
+                                user.data.tasks[key] = one.tasks[task_id];
+                            });
+
+                            one.users[user["@id"]] = user.data;
+                        });
+
+                        tasks.forEach(function (task) {
+                            if (null === task.data.user) {
+                                return;
+                            }
+
+                            task.data.user = one.users[task.data.user];
+                        });
+
+                        one.redraw(document);
+                    });
+                }, function (xhr) { console.error(xhr); });
+            })(document);
+        </script>
     </body>
 </html>
