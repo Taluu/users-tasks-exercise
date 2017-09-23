@@ -135,7 +135,7 @@ var one = {
         ;
     },
 
-    "load": function (method, path, status, success, error) {
+    "send": function (method, path, status, success, error) {
         let xhr = new XMLHttpRequest();
 
         xhr.onreadystatechange = function() {

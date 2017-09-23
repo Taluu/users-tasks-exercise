@@ -68,13 +68,13 @@
         <script src="/one.js"></script>
         <script>
             (function (document) {
-                one.load("GET", "//localhost/tasks", 200, function (tasks) {
+                one.send("GET", "//localhost/tasks", 200, function (tasks) {
                     tasks.forEach(function (task) {
                         task.data.created_at = new Date(task.data.created_at);
                         one.tasks[task["@id"]] = task.data;
                     });
 
-                    one.load("GET", "//localhost/users", 200, function (users) {
+                    one.send("GET", "//localhost/users", 200, function (users) {
                         users.forEach(function (user) {
                             user.data.tasks.forEach(function (task_id, key) {
                                 user.data.tasks[key] = one.tasks[task_id];
