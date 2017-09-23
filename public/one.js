@@ -15,7 +15,7 @@ var one = {
         this.register(document, 'task', 'delete', function (task) {
             let id = "/tasks/" + task.id;
 
-            that.send("DELETE", "//localhost" + id, 204, function () {
+            that.send("DELETE", "//localhost" + id, null, 204, function () {
                 for (let id in that.users) {
                     let user = that.users[id];
                     let index = user.tasks.indexOf(task);
@@ -33,7 +33,7 @@ var one = {
         this.register(document, 'user', 'delete', function (user) {
             let id = "/users/" + user.id;
 
-            that.send("DELETE", "//localhost" + id, 204, function () {
+            that.send("DELETE", "//localhost" + id, null, 204, function () {
                 for (let id in that.tasks) {
                     let task = that.tasks[id];
 
@@ -177,7 +177,7 @@ var one = {
         ;
     },
 
-    "send": function (method, path, status, success, error) {
+    "send": function (method, path, body, status, success, error) {
         let xhr = new XMLHttpRequest();
 
         xhr.onreadystatechange = function() {
@@ -202,7 +202,12 @@ var one = {
             }
         };
 
+        if (null !== body && 'object' === typeof body) {
+            body = JSON.stringify(body);
+        }
+
         xhr.open(method, path, true);
-        xhr.send();
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.send(body);
     }
 };
