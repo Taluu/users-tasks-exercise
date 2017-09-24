@@ -95,14 +95,18 @@ SQL;
                     $matches = [];
 
                     if (!preg_match('{^/users/(?P<id>[0-9]+)$}', $v, $matches)) {
-                        return;
+                        return $v;
                     }
 
                     return (int) $matches['id'];
                 })
-                ->addValidator('user', function (?int $v) {
+                ->addValidator('user', function ($v) {
                     // already validated by cleaner
                     if (null === $v) {
+                        return;
+                    }
+
+                    if (!filter_var($v, FILTER_VALIDATE_INT)) {
                         throw new ValidationException("wrong format");
                     }
 
