@@ -2,14 +2,11 @@ Test One
 ========
 Requirements
 ------------
-- php 7.1+
-- composer
 - docker
 
 How to run
 ----------
 - copy `.env.dist` into `.env`, with the right database uri (should be left as is if using docker)
-- `composer install`
 - if docker is installed, a `docker-compose up` and there you go (available on `http://localhost`)
 
 Endpoints
@@ -30,3 +27,6 @@ Endpoints
 
 The `GET /tasks` as a "user" parameter (through its id), to filter the list for
 a specific user, e.g `GET /tasks?user={id}`
+
+### Front
+Just go for `localhost/front.html` :}
