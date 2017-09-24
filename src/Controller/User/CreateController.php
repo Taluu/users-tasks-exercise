@@ -53,8 +53,8 @@ class CreateController
 
         $juicer = (new Juicer)
             ->addField('name')
-                ->addCleaner('title', function ($v): string { return trim($v); })
-                ->addValidator('title', function ($v) {
+                ->addCleaner('name', function ($v): string { return trim($v); })
+                ->addValidator('name', function ($v) {
                     if (strlen($v) > 250) {
                         throw new ValidationException("Length must be between 1 and 250 chars, {$v} given.");
                     }
@@ -63,7 +63,7 @@ class CreateController
                 ->addCleaner('email', function ($v): string { return trim($v); })
                 ->addValidator('email', function ($v) {
                     if (false === filter_var($v, FILTER_VALIDATE_EMAIL)) {
-                        throw new ValidationException("Length must be between 1 and 250 chars, {$v} given.");
+                        throw new ValidationException("Length must be an email, {$v} given.");
                     }
                 })
         ;
@@ -96,7 +96,8 @@ SQL;
             'data' => [
                 'id' => $id,
                 'name' => $data['name'],
-                'email' => $data['email']
+                'email' => $data['email'],
+                'tasks' => [],
             ]
         ];
 
