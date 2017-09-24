@@ -1,6 +1,8 @@
 <?php
 namespace Test\One\Controller;
 
+use Chanmix51\ParameterJuicer\Exception\ValidationException;
+
 trait ValidationTrait
 {
     private function renderException(ValidationException $e): array {
