@@ -19,5 +19,12 @@
         "psr-4": {
             "Test\\One\\": ["src/"]
         }
+    },
+    "require-dev": {
+        "taluu/behapi": "^0.5.0",
+        "behat/behat": "^3.4",
+        "php-http/curl-client": "^1.7",
+        "php-http/message": "^1.6",
+        "zendframework/zend-diactoros": "^1.6"
     }
 }
