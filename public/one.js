@@ -301,6 +301,14 @@ var one = {
             let id = data["@id"];
             data = data.data;
 
+            // unassign the user (will be reassigned if not changed)
+            if (null !== that.tasks[id].user) {
+                const index = that.tasks[id].user.tasks.indexOf(that.tasks[id]);
+
+                that.tasks[id].user.tasks.splice(index, 1);
+                that.tasks[id].user = null;
+            }
+
             that.tasks[id] = data;
 
             data.created_at = new Date(data.created_at);
