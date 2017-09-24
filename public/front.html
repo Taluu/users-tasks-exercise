@@ -72,7 +72,27 @@
                 <input type="button" id="new_task" value="Create" />
             </div>
 
-            <div id="edit_div" />
+            <div id="edit_div" style="display: none;">
+                <hr />
+ 
+                <h2>Modifications on a Task</h2>
+                <div>
+                    <input type="text" disabled placeholder="Title" name="edit_task[title]" />
+                    <input type="text" disabled placeholder="Description" name="edit_task[description]" />
+
+                    <select name="edit_task[status]" disabled>
+                        <option value="todo">Todo</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="done">Done</option>
+                    </select>
+ 
+                    <select id="task_edit_user_list" name="edit_task[user]" disabled>
+                        <option>None</option>
+                    </select>
+ 
+                    <input type="button" id="edit_task" value="Edit" />
+                </div>
+            </div>
         </div>
 
         <script src="/one.js"></script>

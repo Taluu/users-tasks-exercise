@@ -53,7 +53,15 @@ var one = {
         let old_list = document.getElementById("users_list");
         let new_list  = document.createElement("tbody");
 
+        let old_select = document.getElementById("task_edit_user_list");
+        let new_select = document.createElement("select");
+
+        let option = document.createElement("option");
+        option.appendChild(document.createTextNode("Nobody"));
+        new_select.appendChild(option);
+
         for (let id in this.users) {
+            // table first
             let row, cell, span;
             let user = this.users[id];
 
@@ -86,7 +94,17 @@ var one = {
             row.appendChild(cell);
 
             new_list.appendChild(row);
+
+            // select items
+            option = document.createElement("option");
+            option.value = "/users/" + user.id;
+            option.appendChild(document.createTextNode(user.name));
+            new_select.append(option);
         }
+
+        new_select.id = old_select.id;
+        new_select.name = old_select.name;
+        old_select.parentNode.replaceChild(new_select, old_select);
 
         new_list.id = old_list.id;
         old_list.parentNode.replaceChild(new_list, old_list);
