@@ -146,9 +146,8 @@ SQL;
         $statement->bindValue(2, $data['description'], PDO::PARAM_STR);
         $statement->bindValue(3, $data['status'], PDO::PARAM_STR);
         $statement->bindValue(4, $task['id'], PDO::PARAM_STR);
-        $statement->execute();
 
-        if (!$statement->rowCount()) {
+        if (!$statement->execute()) {
             throw new HttpException(500, "Could not edit task.");
         }
 
