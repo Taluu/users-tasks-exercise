@@ -175,6 +175,37 @@ var one = {
         ;
     },
 
+    "create_user": function (document, name, email) {
+        let input = {
+            name: name,
+            email: email
+        };
+
+        let that = this;
+
+        this.send("POST", "//localhost/users", input, 201, function (data) {
+            that.users[data['@id']] = data['data'];
+
+            that.redraw(document);
+        });
+    },
+
+    "create_task": function (document, title, description) {
+        let input = {
+            title: title,
+            description: description || null
+        };
+
+        let that = this;
+
+        this.send("POST", "//localhost/tasks", input, 201, function (data) {
+            data.data.created_at = new Date(data.data.created_at);
+            that.tasks[data['@id']] = data['data'];
+
+            that.redraw(document);
+        });
+    },
+
     "send": function (method, path, body, status, success, error) {
         let xhr = new XMLHttpRequest();
 
