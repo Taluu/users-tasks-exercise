@@ -4,4 +4,7 @@ composer.lock
 .env
 !.env.dist
 
+behat.yml
+!behat.yml.dist
+
 var/data/
