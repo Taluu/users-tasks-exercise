@@ -8,8 +8,72 @@ var one = {
         this.redraw_users(document);
         this.redraw_tasks(document);
 
-        this.register(document, 'task', 'edit', function (target) {
-            console.log(target);
+        this.register(document, 'task', 'edit', function (task) {
+            let div = document.getElementById('edit_div');
+
+            let fields = {};
+            let task_id = "/tasks/" + task.id;
+
+            document.querySelectorAll('[name^=edit_task]').forEach(function (field) {
+                const regex = /^edit_task\[([a-z]+)\]$/u;
+
+                if (!field.name.match(regex)) {
+                    return;
+                }
+
+                const name = field.name.replace(regex, '$1');
+
+                fields[name] = fields[name] || [];
+
+                fields[name].push(field);
+            });
+
+            fields.title[0].value = task.title;
+
+            if (null !== task.description) {
+                fields.description[0].value = task.description;
+            }
+
+            for (let i = 0; i < fields.status[0].options.length; i++) {
+                let option = fields.status[0].options[i];
+
+                if (option.value !== task.status) {
+                    continue;
+                }
+
+                option.selected = true;
+            };
+
+            for (let i = 0; i < fields.user[0].options.length; i++) {
+                let option = fields.user[0].options[i];
+                let user = task.user ? "/users/" + task.user.id : null;
+                let value = "Nobody" === option.value ? null : option.value;
+
+                if (value !== user) {
+                    continue;
+                }
+
+                option.selected = true;
+            };
+
+            fields.user[0].disabled = false;
+            fields.status[0].disabled = false;
+            fields.description[0].disabled = false;
+
+            div.style.display = 'block';
+
+            document.getElementById('edit_task').addEventListener('click', function () {
+                const status = fields.status[0].selectedOptions[0].value;
+                const user = "Nobody" == fields.user[0].selectedOptions[0].value ? null : fields.user[0].selectedOptions[0].value;
+
+                if (!fields.description[0].checkValidity()) {
+                    return;
+                }
+
+                that.edit_task(document, task.id, fields.description[0].value, status, user);
+
+                div.style.display = 'none';
+            });
         });
 
         this.register(document, 'task', 'delete', function (task) {
@@ -219,6 +283,32 @@ var one = {
         this.send("POST", "//localhost/tasks", input, 201, function (data) {
             data.data.created_at = new Date(data.data.created_at);
             that.tasks[data['@id']] = data['data'];
+
+            that.redraw(document);
+        });
+    },
+
+    "edit_task": function (document, id, description, status, user) {
+        let input = {
+            user: user,
+            status: status,
+            description: description || null
+        };
+
+        let that = this;
+
+        this.send("PUT", "//localhost/tasks/" + id, input, 200, function (data) {
+            let id = data["@id"];
+            data = data.data;
+
+            that.tasks[id] = data;
+
+            data.created_at = new Date(data.created_at);
+
+            if (null !== data.user) {
+                data.user = that.users[data.user];
+                data.user.tasks.push(data);
+            }
 
             that.redraw(document);
         });
