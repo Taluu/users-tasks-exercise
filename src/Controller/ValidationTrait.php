@@ -7,14 +7,20 @@ trait ValidationTrait
 {
     private function renderException(ValidationException $e): array {
         $data = [
-            'error_message' => $e->getMessage()
+            'message' => $e->getMessage(),
+            'errors' => []
         ];
 
         foreach ($e->getExceptions() as $field => $exceptions) {
-            $data[$field] = [];
+            $data['errors'][$field] = [];
 
             foreach ($exceptions as $exception) {
-                $data[$field][] = $this->renderException($exception);
+                if ($exception instanceof ValidationException && $exception->hasExceptions()) {
+                    $data['errors'][$field][] = $this->renderException($exception);
+                    continue;
+                }
+
+                $data['errors'][$field][] = $exception->getMessage();
             }
         }
 
