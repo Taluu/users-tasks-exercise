@@ -63,7 +63,7 @@ class CreateController
                 ->addCleaner('email', function ($v): string { return trim($v); })
                 ->addValidator('email', function ($v) {
                     if (false === filter_var($v, FILTER_VALIDATE_EMAIL)) {
-                        throw new ValidationException("Length must be an email, {$v} given.");
+                        throw new ValidationException("Value must be an email, {$v} given.");
                     }
                 })
         ;
