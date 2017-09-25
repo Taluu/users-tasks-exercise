@@ -30,3 +30,12 @@ a specific user, e.g `GET /tasks?user={id}`
 
 ### Front
 Just go for `localhost/front.html` :}
+
+Tests
+-----
+This "app" is behat covered. Copy the `behat.yml.dist` to `behat.yml`, and if
+you are running docker, just a `vendor/bin/behat` should do the trick.
+
+**note** Because of some bugs in behat (shit happens...), it may not run
+smoothly, but this should be corrected once
+https://github.com/Behat/Behat/pull/1081 is merged. :}
