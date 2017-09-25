@@ -7,6 +7,8 @@ services:
       dockerfile: .docker/app/Dockerfile
     depends_on:
       - db
+    environment:
+      - DATABASE_URL="mysql://hello:one@db/test_one?charset=utf8mb4&serverVersion=5.7"
     volumes:
       - ./:/srv/app:rw
 
